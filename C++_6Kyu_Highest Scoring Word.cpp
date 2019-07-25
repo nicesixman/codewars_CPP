@@ -5,8 +5,8 @@ using namespace std;
 
 string highestScoringWord(const string &str)
 {
-	// '&str' will be filled to 'HighestScoringWord'
-	return str;
+	cout << "현재 가장 높은 점수의 단어는...: " << str;			// for debug
+	return str;													// 'str' will be filled to 'final_word'
 	// return "magic";
 }
 
@@ -17,17 +17,21 @@ string getHighestScoringWord(const string &str_word)
 	int word_points = 0;
 	int word_compare = 0;
 
-	string final_word;
-	int where_is_space = 0;
+	char devided_word[100] = { '\0', };
+	int alphabet_count = 0;
 
-	cout << "입력된 전체 문장: " << full_sentence << "\n\n";
+	cout << "입력된 전체 문장: " << full_sentence << "\n------------------------------------------------\n";
 	for (int i=0; i<(int)full_sentence.length(); i++)
 	{
 		// 공백 문자 발견 + 점수가 가장 클 경우
 		if ((full_sentence.at(i) == ' ') && (word_compare < word_points))
 		{
-			word_compare = word_points;
+			highestScoringWord(devided_word);	// highestScoringWord 함수로 점숙가 가장 큰 단어를 보낸 후
+			word_compare = word_points;			// 해당 단어의 점수를 word_compare에 저장하여 지속 비교.
+			cout << " -> " << word_compare << "점 입니다.\n";			// for debug
 			word_points = 0;
+			memset(devided_word, '\0', sizeof(devided_word));
+			alphabet_count = 0;
 			continue;
 		}
 
@@ -35,29 +39,35 @@ string getHighestScoringWord(const string &str_word)
 		else if ((full_sentence.at(i) == ' ') && (word_compare >= word_points))
 		{
 			word_points = 0;
-			where_is_space = i;
+			memset(devided_word, '\0', sizeof(devided_word));
+			alphabet_count = 0;
 			continue;
 		}
 
 		// 그 외 일반 문자인 경우
 		else
 		{
-			word_points += (int)full_sentence.at(i) - get_alphabet_points;
-			cout << "개별: " << (int)full_sentence.at(i) - get_alphabet_points << "\n";
+			word_points += (int)full_sentence.at(i) - get_alphabet_points;			// 단어별 점수 합산
+			devided_word[alphabet_count] = full_sentence.at(i);
+			alphabet_count++;
+			// 제일 마지막 단어는 공백이 없으므로 별도 조건식 작성
+			if ((i == (int)full_sentence.length() - 1) && (word_compare < word_points))
+			{
+				highestScoringWord(devided_word);
+				word_compare = word_points;
+				cout << " -> " << word_compare << "점 입니다.\n";			// for debug
+				memset(devided_word, '\0', sizeof(devided_word));
+			}
 		}
 	}
-
-	// 다음 단어와 비교했을 때, 다음 단어가 더 크면 해당 단어를 highestScorringWord에 저장하는 방식으로 풀면 될 듯.
-	// 숫자 합산 및 가장 큰 단어가 있는 부분 계산은 잘 해결됐지만, 해당되는 단어를 string으로 빼는 방법을 고민 중.
-
 	return str_word;
 }
 
 int main()
 {
 	// All letters will be lowercase and all inputs will be valid.
-	// 'a' = 97, 'z' = 122
-	// "magic" = 13, 1, 7, 9, 3 = 33
+	// ASCII) 'a' = 97, 'z' = 122
+	// ex) magic == 13, 1, 7, 9, 3 = 33
 
 	string input;
 
