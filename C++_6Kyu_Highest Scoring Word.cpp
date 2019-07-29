@@ -5,18 +5,12 @@ using namespace std;
 
 string highestScoringWord(const string &str)
 {
-	cout << "현재 가장 높은 점수의 단어는...: " << str;			// for debug
-	return str;													// 'str' will be filled to 'final_word'
-	// return "magic";
-}
-
-string getHighestScoringWord(const string &str_word)
-{
-	string full_sentence = str_word;
+	string full_sentence = str;
 	int get_alphabet_points = 96;
 	int word_points = 0;
 	int word_compare = 0;
 
+	string final_word;
 	char devided_word[100] = { '\0', };
 	int alphabet_count = 0;
 
@@ -26,9 +20,9 @@ string getHighestScoringWord(const string &str_word)
 		// 공백 문자 발견 + 점수가 가장 클 경우
 		if ((full_sentence.at(i) == ' ') && (word_compare < word_points))
 		{
-			highestScoringWord(devided_word);	// highestScoringWord 함수로 점숙가 가장 큰 단어를 보낸 후
-			word_compare = word_points;			// 해당 단어의 점수를 word_compare에 저장하여 지속 비교.
-			cout << " -> " << word_compare << "점 입니다.\n";			// for debug
+			final_word = devided_word;				// 가장 높은 단어를 final_word에 저장한 후
+			word_compare = word_points;				// 해당 단어의 점수를 word_compare에 저장하여 지속 비교.
+			cout << final_word << " -> " << word_compare << "점 입니다.\n";			// for debug
 			word_points = 0;
 			memset(devided_word, '\0', sizeof(devided_word));
 			alphabet_count = 0;
@@ -53,14 +47,16 @@ string getHighestScoringWord(const string &str_word)
 			// 제일 마지막 단어는 공백이 없으므로 별도 조건식 작성
 			if ((i == (int)full_sentence.length() - 1) && (word_compare < word_points))
 			{
-				highestScoringWord(devided_word);
+				final_word = devided_word;
 				word_compare = word_points;
-				cout << " -> " << word_compare << "점 입니다.\n";			// for debug
+				cout << final_word << " -> " << word_compare << "점 입니다.\n";			// for debug
 				memset(devided_word, '\0', sizeof(devided_word));
+				break;			// for문 탈출.
 			}
 		}
 	}
-	return str_word;
+	cout << "최종 선별 단어(return): " << final_word << endl;
+	return final_word;
 }
 
 int main()
@@ -73,7 +69,7 @@ int main()
 
 	cout << "소문자 문장을 입력하세요.\n";
 	getline(cin, input);
-	getHighestScoringWord(input);
+	highestScoringWord(input);
 
 	system("pause");
 	return 0;
